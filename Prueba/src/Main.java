@@ -21,8 +21,9 @@ public class Main {
 		lineas=new ArrayList<String>();
 		vInt=new ArrayList<String>();
 		vFloat=new ArrayList<String>();
-        String cadena=leedorTexto();
-        String funcion="(int|float|char|bool)\\s+[a-zA-Z][\\w]*\\s*((\\()|(=\\s*'?\\w+'?[\\.]?(\\d+)?)?\\s*(,|=)|,?\\s*[a-zA-z][\\w]*)*";
+        //String cadena=leedorTexto();
+		String cadena="";
+        String funcion="(int|float|char|bool)\\s+[a-zA-Z][\\w]*\\s*(((\\())|((=\\s*'?\\w+'?[\\.]?(\\d+)?)?\\s*(,|=))|(\\s*,?\\s*[a-zA-z][\\w]*\\s*))*";
         Pattern limpiar = Pattern.compile(funcion);
         Matcher buscar = limpiar.matcher(cadena);
         while(buscar.find()){
@@ -37,7 +38,43 @@ public class Main {
 		// TODO Auto-generated method stub
 		StringTokenizer token=new StringTokenizer(linea);
 		String tipo=token.nextToken();
-		
+		if(tipo.equals("int")){
+			separacionN(linea,vInt);
+		}
+		else if(tipo.equals("float")){
+			separacionN(linea,vFloat);
+		}
+	}
+	private static void separacionN(String linea,ArrayList vars) {
+		// TODO Auto-generated method stub
+		ArrayList<String> variables;
+		variables=separacion(linea);
+		StringBuilder var;
+		for(int i=0;i<variables.size();i++){
+			var=new StringBuilder();
+			for(int j=0;j<variables.get(i).length();){
+				if(variables.get(i).charAt(j)==' '||variables.get(i).charAt(j)==','||variables.get(i).charAt(j)=='='){
+					j++;
+				}
+				else{
+					var.append(variables.get(i).charAt(j));
+					j++;
+				}
+			}
+			System.out.println(var);
+			vars.add(new String(var));
+		}
+	}
+	private static ArrayList<String> separacion(String linea) {
+		// TODO Auto-generated method stub
+		ArrayList<String> lineas=new ArrayList<String>();
+		String funcion="(\\s*\\s*[a-zA-Z][\\w]*\\s*)|(\\s*[a-zA-Z][\\w]*\\s*$)|(\\s*[a-z][A-Z]*\\s*=)|(,\\s*[a-zA-Z][\\w]*\\s*(,|=))|(=\\s*[a-zA-Z][\\w]*\\s*,)";
+        Pattern limpiar = Pattern.compile(funcion);
+        Matcher buscar = limpiar.matcher(linea);
+        while(buscar.find()){
+        	lineas.add(buscar.group());
+        }
+		return lineas;
 	}
 	public static String leedorTexto() {
 		String cadena="";
